@@ -1,0 +1,10 @@
+---
+- name: Deploy MOTD
+  become: true
+  ansible.builtin.template:
+    src: motd.j2
+    dest: "{{ general_motd_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: general_motd_enabled | bool

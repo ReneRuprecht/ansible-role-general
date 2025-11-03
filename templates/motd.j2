@@ -1,0 +1,13 @@
+{% set os_name = ansible_distribution ~ ' ' ~ ansible_distribution_version %}
+{% set uptime = ansible_uptime_seconds | int // 86400 ~ 'd ' ~ ((ansible_uptime_seconds | int % 86400) // 3600) ~ 'h' %}
+{% set primary_ip = ansible_default_ipv4.address | default('N/A') %}
+{% set fqdn = general_hostname | default(ansible_hostname) %}
+
+───────────────────────────────────────────────
+ 🖥️   Hostname    : {{ fqdn }}
+ 🌍  Environment : {{ general_environment | upper }}
+ 🧩  OS          : {{ os_name }} ({{ ansible_architecture }})
+ ⏱️   Uptime      : {{ uptime }}
+ 🔌  IP Address  : {{ primary_ip }}
+ 🧱  Managed by  : {{ general_motd_managed_by }}
+───────────────────────────────────────────────

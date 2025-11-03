@@ -1,0 +1,32 @@
+---
+- name: Restart systemd-journald
+  become: true
+  ansible.builtin.service:
+    name: systemd-journald
+    state: restarted
+
+- name: Reload ssh
+  become: true
+  ansible.builtin.service:
+    name: ssh
+    state: reloaded
+
+- name: Restart fail2ban
+  become: true
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+
+- name: Restart systemd-resolved
+  become: true
+  when:
+    - resolvectl_check.rc == 0
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+
+- name: Reload systemd-networkd
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-networkd
+    state: reloaded

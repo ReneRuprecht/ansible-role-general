@@ -1,0 +1,21 @@
+---
+- name: "Install debian packages"
+  when: ansible_os_family == "Debian"
+  block:
+    - name: "Update apt cache (Debian/Ubuntu only)"
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: "Install debian base packages"
+      become: true
+      ansible.builtin.package:
+        name: "{{ general_debian_base_packages }}"
+        state: present
+
+    - name: "Install extra debian packages (if defined)"
+      become: true
+      ansible.builtin.package:
+        name: "{{ general_debian_extra_packages }}"
+        state: present
+      when: general_debian_extra_packages | length > 0

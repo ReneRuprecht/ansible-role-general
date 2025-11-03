@@ -1,0 +1,39 @@
+---
+- name: Check admin ssh key is set
+  when: not general_ignore_ssh_key_deployment
+  ansible.builtin.assert:
+    that:
+      - general_admin_ssh_key is defined
+      - general_admin_ssh_key != ""
+    fail_msg: >
+      No admin SSH key found. Please ensure that an admin SSH public key
+      is configured before continuing. Set the variable `general_admin_ssh_key`.
+
+- name: Check root password is set
+  when: general_root_setup_enabled
+  ansible.builtin.assert:
+    that:
+      - general_root_password is defined
+      - general_root_password != ""
+    fail_msg: >
+      No root passowrd found. Please ensure that a root password
+      is configured before continuing. Set the variable `general_root_password`.
+
+- name: Check root password salt is set
+  when: general_root_setup_enabled
+  ansible.builtin.assert:
+    that:
+      - general_root_password_salt is defined
+      - general_root_password_salt != ""
+    fail_msg: >
+      No root passowrd salt found. Please ensure that a root password salt
+      is configured before continuing. Set the variable `general_root_password_salt`.
+
+- name: Check if ip address is set
+  ansible.builtin.assert:
+    that:
+      - general_ip_address is defined
+      - general_ip_address != 0
+    fail_msg: >
+      No ip address found. Please ensure that a ip address
+      is configured before continuing. Set the variable `general_ip_address`.

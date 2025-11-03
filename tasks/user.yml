@@ -1,0 +1,29 @@
+---
+- name: Ensure admin user exists
+  become: true
+  ansible.builtin.user:
+    name: "{{ general_admin_user }}"
+    shell: "{{ general_admin_shell }}"
+    state: present
+    create_home: true
+  no_log: "{{ general_hide_user_logs }}"
+
+- name: Add SSH authorized key for admin user
+  become: true
+  ansible.builtin.authorized_key:
+    user: "{{ general_admin_user }}"
+    key: "{{ general_admin_ssh_key }}"
+    state: present
+  when: general_admin_ssh_key != ""
+  no_log: "{{ general_hide_user_logs }}"
+
+- name: Ensure admin user has sudo privileges
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ general_admin_user }}"
+    content: "{{ general_admin_user }} ALL=(ALL) NOPASSWD:ALL"
+    owner: root
+    group: root
+    mode: '0440'
+  when: general_admin_sudo
+  no_log: "{{ general_hide_user_logs }}"

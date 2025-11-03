@@ -1,0 +1,31 @@
+---
+- name: Deploy dynamic SSH banner
+  become: true
+  ansible.builtin.template:
+    src: ssh_banner.j2
+    dest: "{{ general_ssh_banner_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: general_ssh_banner_enabled | bool
+
+- name: Configure SSH banner path
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Banner'
+    line: "Banner {{ general_ssh_banner_path }}"
+    state: present
+    backup: true
+  notify: Reload ssh
+  when: general_ssh_banner_enabled | bool
+
+- name: Disable SSH banner if not enabled
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Banner'
+    state: absent
+    backup: true
+  notify: Reload ssh
+  when: not general_ssh_banner_enabled | bool

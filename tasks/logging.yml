@@ -1,0 +1,54 @@
+---
+- name: Ensure persistent journald directory exists
+  become: true
+  ansible.builtin.file:
+    path: /var/log/journal
+    state: directory
+    owner: root
+    group: systemd-journal
+    mode: '2755'
+  when: ansible_service_mgr == "systemd"
+
+- name: Ensure [Journal] section exists in journald.conf
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^\[Journal\]'
+    line: '[Journal]'
+    insertafter: BOF
+    create: true
+    mode: "0644"
+  notify: Restart systemd-journald
+  when: ansible_service_mgr == "systemd"
+
+- name: Configure journald to use persistent storage
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    insertafter: '^\[Journal\]'
+    regexp: '^#?Storage='
+    line: "Storage={{ general_journald_storage }}"
+    state: present
+  notify: Restart systemd-journald
+  when: ansible_service_mgr == "systemd"
+
+- name: Configure journald limits
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/systemd/journald.conf
+    marker: "# {mark} ANSIBLE MANAGED"
+    block: |
+      SystemMaxUse={{ general_journald_max_use }}
+      SystemKeepFree={{ general_journald_keep_free }}
+      SystemMaxFileSize={{ general_journald_max_file_size }}
+      SystemMaxFiles={{ general_journald_max_files }}
+  notify: Restart systemd-journald
+  when: ansible_service_mgr == "systemd"
+
+- name: Ensure app log directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ general_app_log_dir }}"
+    state: directory
+    owner: "{{ general_app_log_owner }}"
+    group: "{{ general_app_log_group }}"
+    mode: '0755'

@@ -1,0 +1,61 @@
+---
+- name: Ensure SSH root login setting
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: "PermitRootLogin {{ general_ssh_permit_root_login }}"
+    state: present
+    backup: true
+  notify: Reload ssh
+  no_log: "{{ general_hide_ssh_logs }}"
+
+- name: Ensure SSH password authentication setting
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: "PasswordAuthentication {{ general_ssh_password_authentication }}"
+    state: present
+    backup: true
+  notify: Reload ssh
+  no_log: "{{ general_hide_ssh_logs }}"
+
+- name: Ensure SSH port setting
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Port'
+    line: "Port {{ general_ssh_port }}"
+    state: present
+    backup: true
+  notify: Reload ssh
+  no_log: "{{ general_hide_ssh_logs }}"
+
+- name: Ensure SSH log level
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?LogLevel'
+    line: "LogLevel {{ general_ssh_log_level }}"
+    state: present
+    backup: true
+  notify: Reload ssh
+  no_log: "{{ general_hide_ssh_logs }}"
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ general_admin_user }}/.ssh"
+    state: directory
+    owner: "{{ general_admin_user }}"
+    group: "{{ general_admin_user }}"
+    mode: '0700'
+  no_log: "{{ general_hide_ssh_logs }}"
+
+- name: Set authorized_keys (overwrite old keys)
+  ansible.builtin.authorized_key:
+    user: "{{ item.user | default(general_admin_user) }}"
+    key: "{{ item.key }}"
+    state: "{{ item.state | default(present) }}"
+  loop: "{{ general_ssh_keys }}"
+  no_log: "{{ general_hide_ssh_logs }}"

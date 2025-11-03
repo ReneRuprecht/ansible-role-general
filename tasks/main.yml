@@ -1,0 +1,64 @@
+---
+- name: Assert
+  ansible.builtin.include_tasks:
+    file: assert.yml
+
+- name: Setup root
+  when: general_root_setup_enabled
+  ansible.builtin.include_tasks:
+    file: root.yml
+
+- name: Set hostname
+  when: not general_ignore_hostname_task
+  ansible.builtin.include_tasks:
+    file: hostname.yml
+
+- name: Set motd
+  ansible.builtin.include_tasks:
+    file: motd.yml
+
+- name: Install packages
+  ansible.builtin.include_tasks:
+    file: packages.yml
+
+- name: Setup admin user
+  ansible.builtin.include_tasks:
+    file: user.yml
+
+- name: Setup ssh
+  ansible.builtin.include_tasks:
+    file: ssh.yml
+
+- name: Setup ssh banner
+  ansible.builtin.include_tasks:
+    file: ssh_banner.yml
+
+- name: Setup debian networking
+  ansible.builtin.include_tasks:
+    file: networking.yml
+
+- name: Setup debian dns
+  ansible.builtin.include_tasks:
+    file: dns.yml
+
+- name: Setup logging
+  ansible.builtin.include_tasks:
+    file: logging.yml
+
+- name: Setup timezone
+  ansible.builtin.include_tasks:
+    file: timezone.yml
+
+- name: Setup firewall
+  ansible.builtin.include_tasks:
+    file: firewall.yml
+
+- name: Setup fail2ban
+  ansible.builtin.include_tasks:
+    file: fail2ban.yml
+  when: general_fail2ban_enabled
+
+- name: Setup ntp
+  ansible.builtin.include_tasks:
+    file: ntp.yml
+  when: general_ntp_enabled

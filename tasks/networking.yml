@@ -1,0 +1,12 @@
+---
+- name: Create static network config from template
+  become: true
+  template:
+    src: static-network.network.j2
+    dest: "/etc/systemd/network/10-netplan-{{ ansible_default_ipv4.interface }}.network"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart systemd-resolved
+    - Reload systemd-networkd

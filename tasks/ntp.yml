@@ -1,0 +1,13 @@
+---
+- name: Ensure chrony is installed
+  become: true
+  ansible.builtin.package:
+    name: chrony
+    state: present
+
+- name: Ensure chrony service is enabled and running
+  become: true
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started

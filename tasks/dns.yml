@@ -1,0 +1,63 @@
+---
+- name: Check if resolvectl command exists
+  ansible.builtin.command: which resolvectl
+  register: resolvectl_check
+  ignore_errors: true
+  changed_when: false
+  no_log: "{{ general_hide_dns_logs }}"
+
+- name: Check that /etc/systemd/resolved.conf exists
+  stat:
+    path: /etc/systemd/resolved.conf
+  register: resolved_conf_stat_result
+  no_log: "{{ general_hide_dns_logs }}"
+
+- name: Ensure /etc/systemd/resolved.conf exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/resolved.conf
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+    - not resolved_conf_stat_result.stat.exists
+    - resolvectl_check.rc == 0
+  no_log: "{{ general_hide_dns_logs }}"
+
+- name: Set persistent DNS servers
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNS='
+    line: "DNS={{ general_dns_servers | join(' ') }}"
+    state: present
+  notify: Restart systemd-resolved
+  when: resolvectl_check.rc == 0
+  no_log: "{{ general_hide_dns_logs }}"
+
+- name: Remove search domains if none configured
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?Domains='
+    line: "Domains={{ general_dns_search_domains | join(' ') }}"
+    state: present
+  when:
+    - resolvectl_check.rc == 0
+    - general_dns_search_domains | length > 0
+  notify: Restart systemd-resolved
+  no_log: "{{ general_hide_dns_logs }}"
+
+- name: Disable LLMNR
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?LLMNR='
+    line: "LLMNR=no"
+    state: present
+  when:
+    - resolvectl_check.rc == 0
+    - general_dns_llmnr_disable | bool
+  notify: Restart systemd-resolved
+  no_log: "{{ general_hide_dns_logs }}"

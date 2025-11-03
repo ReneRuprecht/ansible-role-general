@@ -1,0 +1,18 @@
+---
+argument_specs:
+  main:
+    short_description: Main entry point for general role
+    author:
+      - Rene Ruprecht
+    options:
+      general_admin_ssh_key:
+        type: "str"
+        required: true
+        description: "SSH key for admin user"
+      general_environment:
+        type: "str"
+        choices:
+          - "generic"
+          - "development"
+          - "production"
+        required: true

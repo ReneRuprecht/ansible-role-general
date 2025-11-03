@@ -1,0 +1,23 @@
+---
+- name: Ensure fail2ban is installed
+  become: true
+  ansible.builtin.package:
+    name: fail2ban
+    state: present
+
+- name: Deploy SSH jail for Fail2Ban
+  become: true
+  ansible.builtin.template:
+    src: fail2ban_sshd.j2
+    dest: /etc/fail2ban/jail.d/sshd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart fail2ban
+
+- name: Ensure Fail2Ban service is running and enabled
+  become: true
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true

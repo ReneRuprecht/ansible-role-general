@@ -1,0 +1,20 @@
+---
+- name: Determine desired hostname
+  set_fact:
+    hostname_to_set: "{{ general_hostname | default(inventory_hostname) }}"
+  no_log: "{{ general_hide_hostname_logs }}"
+
+- name: Set system hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ hostname_to_set }}"
+  no_log: "{{ general_hide_hostname_logs }}"
+
+- name: Ensure /etc/hosts contains hostname
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1   {{ hostname_to_set }} {{ hostname_to_set.split('.')[0] }}"
+    state: present
+  no_log: "{{ general_hide_hostname_logs }}"

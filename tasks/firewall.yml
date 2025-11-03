@@ -1,0 +1,29 @@
+---
+- name: Ensure ufw is installed
+  become: true
+  ansible.builtin.package:
+    name: ufw
+    state: present
+
+- name: Allow SSH
+  become: true
+  ansible.builtin.ufw:
+    rule: allow
+    port: "{{ general_ssh_port }}"
+    proto: tcp
+    state: enabled
+
+- name: Apply UFW port rules
+  become: true
+  community.general.ufw:
+    rule: "{{ 'allow' if item.state == 'enabled' else 'deny' }}"
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    state: "{{ item.state }}"
+  loop: "{{ general_ufw_ports }}"
+
+- name: Enable UFW
+  become: true
+  ansible.builtin.ufw:
+    state: enabled
+    logging: "{{ general_ufw_logging | default('medium') }}"

@@ -1,0 +1,25 @@
+###############################################################################
+#                                                                             #
+#                          SECURITY NOTICE                                    #
+#                                                                             #
+#  This system is for authorized users only.                                  #
+#  All activities are monitored and recorded.                                 #
+#                                                                             #
+#  Unauthorized access, use, or modification of this system is strictly       #
+#  prohibited and may result in disciplinary action or criminal prosecution.  #
+#                                                                             #
+#  Environment : {{ general_environment | upper }}{{ ' ' * (81 - 4 - 15 - (general_environment | upper | length) - 1) }}#
+#  Hostname    : {{ ansible_fqdn | default(inventory_hostname) }}{{ ' ' * (81 - 4 - 15 - (ansible_fqdn | default(inventory_hostname) | length) - 1) }}#
+#  Date        : {{ ansible_date_time.date }}{{ ' ' * (81 - 4 - 15 - (ansible_date_time.date | length) - 1) }}#
+#                                                                             #
+###############################################################################
+
+{% if general_environment | lower == 'production' %}
+!!! [PRODUCTION SYSTEM] HANDLE WITH EXTREME CARE !!!
+{% elif general_environment | lower == 'staging' %}
+--- [STAGING ENVIRONMENT] FOR TESTING ONLY ---
+{% elif general_environment | lower == 'development' %}
+--- [DEVELOPMENT SYSTEM] ---
+{% else %}
+--- [GENERIC SYSTEM] ---
+{% endif %}

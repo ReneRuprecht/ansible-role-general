@@ -1,0 +1,20 @@
+---
+- name: Set system timezone
+  become: true
+  ansible.builtin.command:
+    cmd: timedatectl set-timezone {{ general_timezone }}
+  register: timezone_change
+  changed_when:
+    - timezone_change.rc == 0
+    - "'Time zone changed' in timezone_change.stdout"
+
+- name: Verify timezone
+  ansible.builtin.command:
+    cmd: timedatectl
+  register: current_timezone
+  changed_when: false
+
+- name: Show current timezone
+  ansible.builtin.debug:
+    msg: "Current timezone is {{ current_timezone.stdout_lines | join('\n') }}"
+    verbosity: 3

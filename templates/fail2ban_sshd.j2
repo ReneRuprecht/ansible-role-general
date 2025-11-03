@@ -1,0 +1,9 @@
+[sshd]
+enabled = {{ general_fail2ban_ssh_enabled | default(true) | ternary('true','false') }}
+port = {{ general_fail2ban_ssh_port }}
+filter = sshd
+backend = {{ general_fail2ban_backend | default('systemd') }}
+logpath = {{ general_fail2ban_logpath | default('%(systemd_journal)s') }}
+maxretry = {{ general_fail2ban_ssh_maxretry }}
+bantime = {{ general_fail2ban_ssh_bantime }}
+findtime = {{ general_fail2ban_ssh_findtime }}

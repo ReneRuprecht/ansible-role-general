@@ -1,0 +1,103 @@
+---
+# Molecule test workaround
+general_ignore_hostname_task: false
+general_ignore_ssh_key_deployment: false
+
+# Networking
+general_ip_interface: "eth0"
+general_ip_address: 0
+general_ip_cidr: 24
+general_ip_gateway: 192.168.178.1
+
+# Hostname
+general_hostname: "{{ inventory_hostname }}"
+
+general_environment: generic
+
+# Ansible logs
+general_hide_dns_logs: true
+general_hide_hostname_logs: true
+general_hide_root_password_logs: true
+general_hide_user_logs: true
+general_hide_ssh_logs: true
+
+# Root local setup
+general_root_setup_enabled: false
+general_root_password: ""
+general_root_password_salt: ""
+
+# Motd config
+general_motd_enabled: true
+general_motd_path: "/etc/motd"
+general_motd_managed_by: "Ansible (general role)"
+general_motd_title: "System Information"
+
+# Packages
+general_debian_base_packages:
+  - ssh
+  - vim
+
+general_debian_extra_packages: []
+
+# Journald config
+general_journald_storage: persistent
+general_journald_max_use: "1G"
+general_journald_keep_free: "100M"
+general_journald_max_file_size: "100M"
+general_journald_max_files: 10
+
+# App log
+general_app_log_owner: "root"
+general_app_log_group: "root"
+general_app_log_dir: "/var/log/app"
+
+# Timezone
+general_timezone: "Europe/Berlin"
+
+# SSH
+general_ssh_permit_root_login: "no"
+general_ssh_password_authentication: "no"
+general_ssh_port: 22
+general_ssh_log_level: "INFO"
+general_ssh_keys: []
+  # - key: ""
+  #   state: present
+  #   user: root
+
+# SSH banner
+general_ssh_banner_enabled: true
+general_ssh_banner_path: /etc/issue.net
+
+# Admin user
+general_admin_user: "ansible"
+general_admin_sudo: true
+general_admin_ssh_key: ""
+general_admin_shell: "/bin/bash"
+
+# Firewall
+general_ufw_logging: "medium"
+general_ufw_ports:
+  - port: "{{ general_ssh_port }}"
+    proto: tcp
+    state: enabled
+    comment: "SSH"
+
+# Fail2Ban defaults
+general_fail2ban_enabled: true
+general_fail2ban_ssh_enabled: true
+general_fail2ban_ssh_port: "{{ general_ssh_port | default(22) }}"
+general_fail2ban_ssh_maxretry: 5
+general_fail2ban_backend: "systemd"
+general_fail2ban_logpath: "$(systemd_journal)s"
+general_fail2ban_ssh_bantime: 600
+general_fail2ban_ssh_findtime: 600
+
+# NTP
+general_ntp_enabled: true
+
+# DNS
+general_dns_servers:
+  - 1.1.1.1
+  - 8.8.8.8
+general_dns_search_domains: []
+general_dns_llmnr_disable: true
