@@ -52,10 +52,10 @@
     mode: '0700'
   no_log: "{{ general_hide_ssh_logs }}"
 
-- name: Set authorized_keys (overwrite old keys)
+- name: Set authorized_keys
   ansible.builtin.authorized_key:
     user: "{{ item.user | default(general_admin_user) }}"
     key: "{{ item.key }}"
     state: "{{ item.state | default(present) }}"
-  loop: "{{ general_ssh_keys }}"
+  loop: "{{ general_ssh_keys + general_ssh_extra_keys }}"
   no_log: "{{ general_hide_ssh_logs }}"

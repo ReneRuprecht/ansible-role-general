@@ -63,6 +63,7 @@ general_ssh_keys: []
   # - key: ""
   #   state: present
   #   user: root
+general_ssh_extra_keys: []
 
 # SSH banner
 general_ssh_banner_enabled: true
