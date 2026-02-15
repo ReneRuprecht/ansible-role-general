@@ -5,6 +5,7 @@
     name: "{{ general_admin_user }}"
     shell: "{{ general_admin_shell }}"
     state: present
+    home: "/home/{{ general_admin_user }}"
     create_home: true
   no_log: "{{ general_hide_user_logs }}"
 

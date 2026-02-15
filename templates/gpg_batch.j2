@@ -1,0 +1,14 @@
+Key-Type: {{ general_gpg_key_type }}
+Key-Length: {{ general_gpg_key_length }}
+Subkey-Type: {{ general_gpg_subkey_type }}
+Subkey-Length: {{ general_gpg_subkey_length }}
+Name-Real: {{ general_gpg_name }}
+Name-Comment: {{ general_gpg_comment }}
+Name-Email: {{ general_gpg_email }}
+Expire-Date: {{ general_gpg_expire_date }}
+{% if general_gpg_passphrase | length > 0 %}
+Passphrase: {{ general_gpg_passphrase }}
+{% else %}
+%no-protection
+{% endif %}
+%commit

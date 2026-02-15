@@ -1,0 +1,58 @@
+---
+- name: Ensure gpg is installed
+  become: true
+  ansible.builtin.package:
+    name: gpg
+    state: present
+
+- name: Ensure .gnupg directory exists
+  become: true
+  become_user: "{{ general_gpg_user }}"
+  ansible.builtin.file:
+    path: "{{ general_gpg_home }}"
+    state: directory
+    owner: "{{ general_gpg_user }}"
+    group: "{{ general_gpg_user }}"
+    mode: "0700"
+
+- name: Create batch file
+  become: true
+  become_user: "{{ general_gpg_user }}"
+  ansible.builtin.template:
+    src: gpg_batch.j2
+    dest: "/tmp/gpg_batch_{{ inventory_hostname }}"
+    mode: "0600"
+
+- name: Check if GPG key already exists
+  become: true
+  become_user: "{{ general_gpg_user }}"
+  ansible.builtin.command: >
+    gpg --homedir {{ general_gpg_home }}
+    --list-keys {{ general_gpg_email }}
+  register: general_gpg_key_check
+  failed_when: false
+  changed_when: false
+
+- name: Generate GPG key
+  become: true
+  become_user: "{{ general_gpg_user }}"
+  changed_when: false
+  ansible.builtin.command: >
+    gpg --batch
+    --homedir {{ general_gpg_home }}
+    --generate-key /tmp/gpg_batch_{{ inventory_hostname }}
+  when: general_gpg_key_check.rc != 0 or general_gpg_force_regenerate
+
+- name: Remove batch file
+  ansible.builtin.file:
+    path: "/tmp/gpg_batch_{{ inventory_hostname }}"
+    state: absent
+
+- name: Import Public Keys
+  become: true
+  become_user: "{{ general_gpg_user }}"
+  changed_when: false
+  when: general_gpg_import_pub_keys | length > 0
+  ansible.builtin.command:
+    cmd: "echo '{{ item }}' | gpg --import"
+  loop: "{{ general_gpg_import_pub_keys }}"

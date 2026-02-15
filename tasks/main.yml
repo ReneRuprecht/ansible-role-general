@@ -62,3 +62,8 @@
   ansible.builtin.include_tasks:
     file: ntp.yml
   when: general_ntp_enabled
+
+- name: Setup gpg
+  ansible.builtin.include_tasks:
+    file: gpg.yml
+  when: general_gpg_create_key
