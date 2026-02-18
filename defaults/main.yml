@@ -125,4 +125,5 @@ general_gpg_expire_date: "0"
 general_gpg_passphrase: ""
 
 general_gpg_import_pub_keys: []
-  # - "gpg pub key"
+  # - name: ""
+  #   key: "gpg pub key"
