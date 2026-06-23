@@ -2,6 +2,7 @@
 # Molecule test workaround
 general_ignore_hostname_task: false
 general_ignore_ssh_key_deployment: false
+general_ignore_dns_resolv_task: false
 
 # Networking
 ## legacy

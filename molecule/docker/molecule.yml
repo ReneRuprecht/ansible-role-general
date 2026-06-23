@@ -55,6 +55,7 @@ provisioner:
         general_ignore_hostname_task: true
         general_ignore_ssh_key_deployment: true
         general_ip_address: 10.0.0.1
+        general_ignore_dns_resolv_task: true
       debian13:
         general_hostname: "debian13"
         general_ignore_ssh_key_deployment: true
@@ -63,6 +64,7 @@ provisioner:
         general_root_password_salt: "testsalt"
         general_root_password: "test"
         general_ip_address: 10.0.0.2
+        general_ignore_dns_resolv_task: true
       debian12-resolved:
         general_hostname: "debian12.resolved"
         general_ignore_ssh_key_deployment: true
@@ -75,7 +77,13 @@ provisioner:
         general_hostname: "debian13.resolved"
         general_ignore_ssh_key_deployment: true
         general_ignore_hostname_task: true
-        general_ip_address: 10.0.0.4
+        general_networking:
+          - interface: "eth0"
+            ip_address: 10.0.0.4
+            ip_gateway: 10.0.0.1
+          - interface: "eth1"
+            ip_address: 11.0.0.5
+            ip_gateway: 11.0.0.1
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
 verifier:

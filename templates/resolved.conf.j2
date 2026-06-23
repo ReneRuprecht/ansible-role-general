@@ -1,0 +1,9 @@
+# Managed by Ansible - do not edit manually
+[Resolve]
+DNS={{ general_dns_servers | join(' ') }}
+{% if general_dns_search_domains | length > 0 %}
+Domains={{ general_dns_search_domains | join(' ') }}
+{% endif %}
+{% if general_dns_llmnr_disable | bool %}
+LLMNR=no
+{% endif %}

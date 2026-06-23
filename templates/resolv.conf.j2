@@ -1,0 +1,7 @@
+# Managed by Ansible - do not edit manually
+{% for server in general_dns_servers %}
+nameserver {{ server }}
+{% endfor %}
+{% if general_dns_search_domains | length > 0 %}
+search {{ general_dns_search_domains | join(' ') }}
+{% endif %}
