@@ -4,10 +4,17 @@ general_ignore_hostname_task: false
 general_ignore_ssh_key_deployment: false
 
 # Networking
+## legacy
 general_ip_interface: "eth0"
 general_ip_address: 0
 general_ip_cidr: 24
 general_ip_gateway: 192.168.178.1
+
+general_networking:
+  - interface: "{{ general_ip_interface | default('eth0') }}"
+    ip_address: "{{ general_ip_address | default(0) }}"
+    ip_cidr: "{{ general_ip_cidr | default(24) }}"
+    ip_gateway: "{{ general_ip_gateway | default('192.168.178.1') }}"
 
 # Hostname
 general_hostname: "{{ inventory_hostname }}"

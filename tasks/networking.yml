@@ -3,10 +3,11 @@
   become: true
   template:
     src: static-network.network.j2
-    dest: "/etc/systemd/network/10-netplan-{{ ansible_default_ipv4.interface }}.network"
+    dest: "/etc/systemd/network/10-netplan-{{ item.interface }}.network"
     owner: root
     group: root
     mode: '0644'
+  loop: "{{ general_networking }}"
   notify:
     - Restart systemd-resolved
     - Reload systemd-networkd

@@ -32,8 +32,8 @@
 - name: Check if ip address is set
   ansible.builtin.assert:
     that:
-      - general_ip_address is defined
-      - general_ip_address != 0
+      - item.ip_address is defined and item.ip_address | string | length > 0
     fail_msg: >
       No ip address found. Please ensure that a ip address
-      is configured before continuing. Set the variable `general_ip_address`.
+      is configured before continuing. Set the variable `general_networking.[].ip_address`.
+  loop: "{{ general_networking }}"

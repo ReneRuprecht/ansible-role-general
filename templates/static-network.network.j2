@@ -1,12 +1,13 @@
 # Managed by Ansible - do not edit manually
 [Match]
-Name={{ general_ip_interface }}
+Name={{ item.interface }}
 
 [Network]
-Address={{ general_ip_address }}/{{ general_ip_cidr | default(24) }}
-DNS={{ general_dns_servers | join(' ') }}
+Address={{ item.ip_address }}/{{ item.ip_cidr | default(24) }}
+{% for server in general_dns_servers %}
+DNS={{ server }}
+{% endfor %}
 LinkLocalAddressing=no
 
 [Route]
-Gateway={{ general_ip_gateway }}
-Destination=0.0.0.0/0
+Gateway={{ item.ip_gateway }}
