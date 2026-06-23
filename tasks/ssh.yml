@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?PermitRootLogin'
+    regexp: '^#?PermitRootLogin\s+.*'
     line: "PermitRootLogin {{ general_ssh_permit_root_login }}"
     state: present
     backup: true
@@ -14,7 +14,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?PasswordAuthentication'
+    regexp: '^#?PasswordAuthentication\s+.*'
     line: "PasswordAuthentication {{ general_ssh_password_authentication }}"
     state: present
     backup: true
@@ -25,7 +25,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?Port'
+    regexp: '^#?Port\s+.*'
     line: "Port {{ general_ssh_port }}"
     state: present
     backup: true
@@ -36,7 +36,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?LogLevel'
+    regexp: '^#?LogLevel\s+.*'
     line: "LogLevel {{ general_ssh_log_level }}"
     state: present
     backup: true
@@ -44,6 +44,7 @@
   no_log: "{{ general_hide_ssh_logs }}"
 
 - name: Ensure .ssh directory exists
+  become: true
   ansible.builtin.file:
     path: "/home/{{ general_admin_user }}/.ssh"
     state: directory
@@ -53,9 +54,10 @@
   no_log: "{{ general_hide_ssh_logs }}"
 
 - name: Set authorized_keys
+  become: true
   ansible.builtin.authorized_key:
     user: "{{ item.user | default(general_admin_user) }}"
     key: "{{ item.key }}"
-    state: "{{ item.state | default(present) }}"
-  loop: "{{ general_ssh_keys + general_ssh_extra_keys }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ (general_ssh_keys | default([])) + (general_ssh_extra_keys | default([])) }}"
   no_log: "{{ general_hide_ssh_logs }}"
