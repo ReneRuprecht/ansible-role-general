@@ -78,7 +78,6 @@ provisioner:
         general_networking:
           - interface: "eth0"
             ip_address: 10.0.0.4
-            ip_gateway: 10.0.0.1
           - interface: "eth1"
             ip_address: 11.0.0.5
             ip_gateway: 11.0.0.1

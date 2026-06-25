@@ -9,5 +9,7 @@ DNS={{ server }}
 {% endfor %}
 LinkLocalAddressing=no
 
+{% if item.ip_gateway is defined and item.ip_gateway | string | length > 0 %}
 [Route]
 Gateway={{ item.ip_gateway }}
+{% endif %}

@@ -7,15 +7,15 @@ general_ignore_dns_resolv_task: false
 # Networking
 ## legacy
 general_ip_interface: "eth0"
-general_ip_address: 0
+general_ip_address: ''
 general_ip_cidr: 24
-general_ip_gateway: 192.168.178.1
+general_ip_gateway: ''
 
 general_networking:
   - interface: "{{ general_ip_interface | default('eth0') }}"
-    ip_address: "{{ general_ip_address | default(0) }}"
+    ip_address: "{{ general_ip_address | default('') }}"
     ip_cidr: "{{ general_ip_cidr | default(24) }}"
-    ip_gateway: "{{ general_ip_gateway | default('192.168.178.1') }}"
+    ip_gateway: "{{ general_ip_gateway | default('') }}"
 
 # Hostname
 general_hostname: "{{ inventory_hostname }}"
