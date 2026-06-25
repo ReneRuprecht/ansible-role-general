@@ -61,8 +61,7 @@ provisioner:
         general_ignore_ssh_key_deployment: true
         general_ignore_hostname_task: true
         general_root_setup_enabled: true
-        general_root_password_salt: "testsalt"
-        general_root_password: "test"
+        general_root_password: "$$6$$z7JNUrxLDdhOLGTs$$2qQz0meX5KHVtE0wi9RTe2cReg7Y6xiWywzcbnL8.MV7AuJhR5sZXglrAHAT7RQsGgiCP546vJQ3RNkqUN9vk0"
         general_ip_address: 10.0.0.2
         general_ignore_dns_resolv_task: true
       debian12-resolved:
@@ -70,8 +69,7 @@ provisioner:
         general_ignore_ssh_key_deployment: true
         general_ignore_hostname_task: true
         general_root_setup_enabled: true
-        general_root_password_salt: "testsalt"
-        general_root_password: "test"
+        general_root_password: "$$6$$z7JNUrxLDdhOLGTs$$2qQz0meX5KHVtE0wi9RTe2cReg7Y6xiWywzcbnL8.MV7AuJhR5sZXglrAHAT7RQsGgiCP546vJQ3RNkqUN9vk0"
         general_ip_address: 10.0.0.3
       debian13-resolved:
         general_hostname: "debian13.resolved"

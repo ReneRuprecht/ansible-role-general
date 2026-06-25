@@ -3,6 +3,6 @@
   become: true
   ansible.builtin.user:
     name: root
-    password: "{{ general_root_password | string | password_hash('sha512', general_root_password_salt) | string }}"
+    password: "{{ general_root_password }}"
     update_password: always
   no_log: "{{ general_hide_root_password_logs }}"
