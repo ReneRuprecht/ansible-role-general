@@ -28,6 +28,7 @@ general_hide_hostname_logs: true
 general_hide_root_password_logs: true
 general_hide_user_logs: true
 general_hide_ssh_logs: true
+general_hide_gpg_logs: true
 
 # Root local setup
 general_root_setup_enabled: false
